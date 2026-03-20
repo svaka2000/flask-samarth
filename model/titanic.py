@@ -86,7 +86,8 @@ class TitanicModel:
         cols = ['embarked_' + str(val) for val in self.encoder.categories_[0]]
         onehot_df = pd.DataFrame(onehot, columns=cols)
         passenger_df = pd.concat([passenger_df, onehot_df], axis=1)
-        passenger_df.drop(['embarked', 'name'], axis=1, inplace=True)
+        passenger_df.drop(['embarked', 'name'], axis=1, inplace=True, errors='ignore')
+        passenger_df = passenger_df[self.features]
 
         die, survive = np.squeeze(self.model.predict_proba(passenger_df))
         return {'die': die, 'survive': survive}
